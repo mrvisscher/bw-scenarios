@@ -10,12 +10,12 @@ class SDFImporter:
 
     @classmethod
     def from_excel(cls, path) -> "SDFImporter":
-        """Read scenarios from a SDF in excel format"""
+        """Read scenarios from an SDF in excel format"""
         pass
 
     @classmethod
     def from_csv(cls, path) -> "SDFImporter":
-        """Read scenarios from a SDF in csv format"""
+        """Read scenarios from an SDF in csv format"""
         pass
 
     @property
