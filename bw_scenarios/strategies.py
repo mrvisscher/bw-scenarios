@@ -27,7 +27,7 @@ def link_scenario_on_keys(data: pd.DataFrame) -> pd.DataFrame:
 
 
 def link_scenario_on_fields(data: pd.DataFrame) -> pd.DataFrame:
-    """"Link scenario entries based on the fields"""
+    """Link scenario entries based on the fields"""
     return data
 
 
