@@ -1,9 +1,10 @@
-from .scenario import Scenario
-
 import pandas as pd
 from typing import Optional, Union
 from os import PathLike
 from pathlib import Path
+
+from .scenario import Scenario
+from .strategies import separate_code_from_key
 
 
 class SDFImporter:
@@ -136,16 +137,21 @@ class SDFImporter:
 
     def apply_strategy(self, strategy):
         """Apply a data mutation strategy to scenarios"""
-        pass
+        self.data = strategy(self.data)
 
     def to_datapackage(self):
         """Process all data into a datapackage"""
         pass
 
     def write(self):
-        if self.unlinked:
+        if len(self.unlinked):
             raise Exception("Cannot write unlinked scenarios")
 
         scenarios = {name: Scenario(name) for name in self.scenario_names}
 
+        for i, row in self.data[["from id", "to id", "flow type"] + self.scenario_names].iterrows():
+            for name, scenario in scenarios.items():
+                scenario.add_exchange(row["from id"], row["to id"], row["flow type"], row[name])
 
+        for scenario in scenarios.values():
+            scenario.save()
