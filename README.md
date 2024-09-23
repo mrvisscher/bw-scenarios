@@ -1,5 +1,7 @@
 # bw-scenarios
 
+This is a project for the BrightCon Hackathon 2024. We aim to move the scenario LCA functionalities from AB to BW25.
+
 [![PyPI](https://img.shields.io/pypi/v/bw-scenarios.svg)][pypi status]
 [![Status](https://img.shields.io/pypi/status/bw-scenarios.svg)][pypi status]
 [![Python Version](https://img.shields.io/pypi/pyversions/bw-scenarios)][pypi status]
