@@ -15,15 +15,88 @@ class SDFImporter:
 
     @classmethod
     def from_excel(cls, path: Union[str, PathLike]) -> "SDFImporter":
-        """Read scenarios from an SDF in excel format"""
+        """
+        Read scenarios from an SDF in excel format to a nested dictionary
+
+        """
         # check if the path is given in the correct format
         if not isinstance(path, (str, PathLike)):
             raise f"Path must be string or PathLike, but type is {type(path)}"
 
-        df_data = pd.read_excel(path)
+        df = pd.read_excel(path)
+
+        # check if the dataframe contains the expected columns
+        expected_columns = [
+            "from activity name",
+            "from reference product",
+            "from location",
+            "from categories",
+            "from database",
+            "from key",
+            "to activity name",
+            "to reference product",
+            "to location",
+            "to categories",
+            "to database",
+            "to key",
+            "flow type",
+        ]
+
+        if not all([col in df.columns for col in expected_columns]):
+            print(
+                "Warning: the dataframe does not contain the expected columns: {}".format(
+                    expected_columns
+                )
+            )
+
+        df = df.fillna(value="")
+
+        # Define the fields that contain the to and from information
+        to_fields = [
+            "to activity name",
+            "to reference product",
+            "to location",
+            "to database",
+            "to categories",
+            "to key",
+        ]
+        from_fields = [
+            "from activity name",
+            "from reference product",
+            "from location",
+            "from categories",
+            "from database",
+            "from key",
+        ]
+        from_fields.extend(["flow type"])
+
+        value_fields = [
+            x for x in df.columns.tolist() if x not in expected_columns
+        ]  # value fields are all other fields
+
+        sdf_dict = {}
+
+        # Iterate over each row
+        for _, row in df.iterrows():
+
+            # store segments of rows in tuples and values in dictionaries
+            to_tuple = tuple(row[field] for field in to_fields)
+            from_tuple = tuple(row[field] for field in from_fields)
+            values = {field: row[field] for field in value_fields}
+
+            # If the to_tuple is not in the dictionary, initialize it
+            if to_tuple not in sdf_dict:
+                sdf_dict[to_tuple] = []
+
+            # Append the from_tuple and values to the to_tuple's list
+            sdf_dict[to_tuple].append({from_tuple: values})
+
+        return sdf_dict
 
     @classmethod
-    def from_csv(cls, path: Union[str, PathLike], delimiter: Optional[str] = None) -> "SDFImporter":
+    def from_csv(
+        cls, path: Union[str, PathLike], delimiter: Optional[str] = None
+    ) -> "SDFImporter":
         """Read scenarios from an SDF in csv format"""
         # check if the path is given in the correct format
         if not isinstance(path, (str, PathLike)):
@@ -41,8 +114,10 @@ class SDFImporter:
                 semicol = line.find(";")
             if comma == -1 and semicol == -1:
                 # neither a comma or semicolon were found, raise error
-                raise ("Delimiter not given and delimiter ',' or ';' not found. "
-                       "Supply delimiter or ensure delimiter is ',' or ';'.")
+                raise (
+                    "Delimiter not given and delimiter ',' or ';' not found. "
+                    "Supply delimiter or ensure delimiter is ',' or ';'."
+                )
             elif comma != -1 and comma < semicol:
                 # comma exists and appears before semicolon
                 delimiter = ","
@@ -51,7 +126,6 @@ class SDFImporter:
                 delimiter = ","
 
         df_data = pd.read_csv(path, delimiter=delimiter)
-
 
     @property
     def unlinked(self) -> list:
@@ -72,5 +146,3 @@ class SDFImporter:
     def to_datapackage(self):
         """Process all data into a datapackage"""
         pass
-
-
