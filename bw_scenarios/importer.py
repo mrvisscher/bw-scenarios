@@ -9,7 +9,7 @@ class SDFImporter:
     data: dict
     strategies: list
 
-    to_fields = [
+    TO_FIELDS = [
         "to activity name",
         "to reference product",
         "to location",
@@ -17,7 +17,7 @@ class SDFImporter:
         "to categories",
         "to key",
     ]
-    from_fields = [
+    FROM_FIELDS = [
         "from activity name",
         "from reference product",
         "from location",
@@ -25,7 +25,7 @@ class SDFImporter:
         "from database",
         "from key",
     ]
-    from_fields.extend(["flow type"])
+    FROM_FIELDS.append("flow type")
 
     def __init__(self):
         pass
@@ -127,8 +127,8 @@ class SDFImporter:
         for _, row in df.iterrows():
 
             # store segments of rows in tuples and values in dictionaries
-            to_tuple = tuple(row[field] for field in cls.to_fields)
-            from_tuple = tuple(row[field] for field in cls.from_fields)
+            to_tuple = tuple(row[field] for field in cls.TO_FIELDS)
+            from_tuple = tuple(row[field] for field in cls.FROM_FIELDS)
             values = {field: row[field] for field in value_fields}
 
             # If the to_tuple is not in the dictionary, initialize it
