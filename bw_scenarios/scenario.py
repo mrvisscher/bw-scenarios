@@ -1,4 +1,16 @@
-from bw2data.data_store import DataStore
+from bw2data.data_store import ProcessedDataStore
 
-class Scenario(DataStore):
+from .meta import scenarios
+
+
+class Scenario(ProcessedDataStore):
+    """
+    {
+        act.id: [
+            (act.id, type, amount),
+        ]
+    }
+
+    """
+    _metadata = scenarios
     pass
