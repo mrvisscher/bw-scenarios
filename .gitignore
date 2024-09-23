@@ -127,3 +127,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+/bw_scenarios/sdf/.~lock.sdf.xlsx#
