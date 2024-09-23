@@ -133,10 +133,14 @@ class SDFImporter:
 
             # If the to_tuple is not in the dictionary, initialize it
             if to_tuple not in sdf_dict:
-                sdf_dict[to_tuple] = []
+                sdf_dict[to_tuple] = {field: row[field] for field in cls.to_fields}
+                sdf_dict[to_tuple]["exchanges"] = []
 
-            # Append the from_tuple and values to the to_tuple's list
-            sdf_dict[to_tuple].append({from_tuple: values})
+            # Append the from_tuple exchange and values to the to_tuple's exchanges list
+            from_dict = {field: row[field] for field in cls.from_fields}
+            from_dict["values"] = values
+
+            sdf_dict[to_tuple]["exchanges"].append(from_dict)
 
         importer = cls()
 
