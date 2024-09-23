@@ -131,3 +131,6 @@ dmypy.json
 .DS_Store
 bw-scenarios.iml
 misc.xml
+
+# Pycharm
+.idea/
