@@ -123,10 +123,12 @@ class SDFImporter:
         return importer
 
     @property
-    def unlinked(self) -> list:
+    def unlinked(self) -> pd.DataFrame:
+        return self.data[self.data["from id"].isna() & self.data["to id"].isna()]
 
-
-        return []
+    @property
+    def scenario_names(self) -> list:
+        return [col for col in self.data.columns if col not in self.TO_FIELDS + self.FROM_FIELDS + ['default', 'from id', 'to id']]
 
     def apply_strategies(self):
         """Apply all data mutation strategies to scenarios"""
@@ -144,17 +146,6 @@ class SDFImporter:
         if self.unlinked:
             raise Exception("Cannot write unlinked scenarios")
 
-        scenarios = {}
+        scenarios = {name: Scenario(name) for name in self.scenario_names}
 
-        for to_act in self.data.values():
-            for exc in to_act["exchanges"]:
-                for scenario, value in exc["values"].items():
-
-                    if scenario not in scenarios:
-                        scenarios[scenario] = {}
-
-                    if not scenarios[scenario][to_act["id"]]:
-                        scenarios[scenario][to_act["id"]] = []
-
-                    scenarios[scenario][to_act["id"]].append((to_act["id"], value, to_act["flow type"]))
 
