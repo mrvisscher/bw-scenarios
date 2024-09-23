@@ -1,6 +1,6 @@
 from .scenario import Scenario
 
-from pandas import pd
+import pandas as pd
 from typing import Optional, Union
 from os import PathLike
 import os
