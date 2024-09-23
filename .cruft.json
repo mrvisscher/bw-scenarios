@@ -1,0 +1,24 @@
+{
+  "template": "https://github.com/brightway-lca/cookiecutter-brightwaylib",
+  "commit": "9ee47efb8072303cf6476d873f392c7753d98082",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "full_name": "marc",
+      "email": "m.t.van.der.meide@cml.leidenuniv.nl",
+      "github_username": "marc-vdm",
+      "project_name": "bw-scenarios",
+      "package_name": "bw_scenarios",
+      "project_short_description": "temp",
+      "version": "0.0.1",
+      "use_pytest": "y",
+      "open_source_license": "MIT",
+      "copyright_year": "2024",
+      "_copy_without_render": [
+        ".github/*"
+      ],
+      "_template": "https://github.com/brightway-lca/cookiecutter-brightwaylib"
+    }
+  },
+  "directory": null
+}
