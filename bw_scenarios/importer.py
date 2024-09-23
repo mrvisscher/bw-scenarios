@@ -5,8 +5,9 @@ from typing import Optional, Union
 from os import PathLike
 from pathlib import Path
 
+
 class SDFImporter:
-    data: dict
+    data: pd.DataFrame
     strategies: list
 
     TO_FIELDS = [
@@ -17,6 +18,7 @@ class SDFImporter:
         "to categories",
         "to key",
     ]
+
     FROM_FIELDS = [
         "from activity name",
         "from reference product",
@@ -24,8 +26,8 @@ class SDFImporter:
         "from categories",
         "from database",
         "from key",
+        "flow type",
     ]
-    FROM_FIELDS.append("flow type")
 
     def __init__(self):
         pass
@@ -113,38 +115,11 @@ class SDFImporter:
                 )
             )
 
-        df = df.fillna(value="")
-
-        # Define the fields that contain the to and from information
-
-        value_fields = [
-            x for x in df.columns.tolist() if x not in expected_columns
-        ]  # value fields are all other fields
-
-        sdf_dict = {}
-
-        # Iterate over each row
-        for _, row in df.iterrows():
-
-            # store segments of rows in tuples and values in dictionaries
-            to_tuple = tuple(row[field] for field in cls.TO_FIELDS)
-            from_tuple = tuple(row[field] for field in cls.FROM_FIELDS)
-            values = {field: row[field] for field in value_fields}
-
-            # If the to_tuple is not in the dictionary, initialize it
-            if to_tuple not in sdf_dict:
-                sdf_dict[to_tuple] = {field: row[field] for field in cls.TO_FIELDS}
-                sdf_dict[to_tuple]["exchanges"] = []
-
-            # Append the from_tuple exchange and values to the to_tuple's exchanges list
-            from_dict = {field: row[field] for field in cls.FROM_FIELDS}
-            from_dict["values"] = values
-
-            sdf_dict[to_tuple]["exchanges"].append(from_dict)
+        df["from id"] = None
+        df["to id"] = None
 
         importer = cls()
-
-        importer.data = sdf_dict
+        importer.data = df
         return importer
 
     @property
