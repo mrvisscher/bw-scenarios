@@ -1,3 +1,10 @@
+import pandas as pd
+
+
+def separate_code_from_key(data: pd.DataFrame) -> pd.DataFrame:
+    data["from code"] = data["from key"].apply(lambda key: eval(key)[1])
+    data["to code"] = data["to key"].apply(lambda key: eval(key)[1])
+    return data
 
 
 def link_scenario_on_keys(data):

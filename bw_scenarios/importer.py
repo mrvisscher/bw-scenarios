@@ -1,9 +1,10 @@
-from .scenario import Scenario
-
 import pandas as pd
 from typing import Optional, Union
 from os import PathLike
 from pathlib import Path
+
+from .scenario import Scenario
+from .strategies import separate_code_from_key
 
 
 class SDFImporter:
@@ -136,7 +137,7 @@ class SDFImporter:
 
     def apply_strategy(self, strategy):
         """Apply a data mutation strategy to scenarios"""
-        pass
+        self.data = strategy(self.data)
 
     def to_datapackage(self):
         """Process all data into a datapackage"""
