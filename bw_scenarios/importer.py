@@ -143,9 +143,14 @@ class SDFImporter:
         pass
 
     def write(self):
-        if self.unlinked:
+        if len(self.unlinked):
             raise Exception("Cannot write unlinked scenarios")
 
         scenarios = {name: Scenario(name) for name in self.scenario_names}
 
+        for i, row in self.data[["from id", "to id", "flow type"] + self.scenario_names].iterrows():
+            for name, scenario in scenarios.items():
+                scenario.add_exchange(row["from id"], row["to id"], row["flow type"], row[name])
 
+        for scenario in scenarios.values():
+            scenario.save()
