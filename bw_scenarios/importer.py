@@ -149,10 +149,8 @@ class SDFImporter:
 
     @property
     def unlinked(self) -> list:
-        return []
 
-    @property
-    def linked(self) -> [Scenario]:
+
         return []
 
     def apply_strategies(self):
