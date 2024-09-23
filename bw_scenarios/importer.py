@@ -3,8 +3,7 @@ from .scenario import Scenario
 import pandas as pd
 from typing import Optional, Union
 from os import PathLike
-import os
-
+from pathlib import Path
 
 class SDFImporter:
     data: dict
@@ -58,7 +57,7 @@ class SDFImporter:
 
         # make sure we have a valid path format
         if isinstance(path, str):
-            path = os.path(path)
+            path = Path(path)
 
         # try to identify a delimiter if one wasn't given
         if not delimiter:
@@ -84,7 +83,7 @@ class SDFImporter:
         return cls.from_dataframe(df_data)
 
     @classmethod
-    def from_dataframe(cls, df):
+    def from_dataframe(cls, df: pd.DataFrame) -> "SDFImporter":
         """
         Parse the SDF input data from a dataframe that is read in either from a csv or excel file into a nested dictionary.
         Stores the nested dictionary in the data attribute of the class.
