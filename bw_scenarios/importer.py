@@ -166,3 +166,22 @@ class SDFImporter:
     def to_datapackage(self):
         """Process all data into a datapackage"""
         pass
+
+    def write(self):
+        if self.unlinked:
+            raise Exception("Cannot write unlinked scenarios")
+
+        scenarios = {}
+
+        for to_act in self.data.values():
+            for exc in to_act["exchanges"]:
+                for scenario, value in exc["values"].items():
+
+                    if scenario not in scenarios:
+                        scenarios[scenario] = {}
+
+                    if not scenarios[scenario][to_act["id"]]:
+                        scenarios[scenario][to_act["id"]] = []
+
+                    scenarios[scenario][to_act["id"]].append((to_act["id"], value, to_act["flow type"]))
+
