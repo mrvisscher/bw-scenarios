@@ -99,9 +99,9 @@ class Scenario(ProcessedDataStore):
     # LCA(fu, data_objs=data_objs, remapping_dicts=remapping)
 
     def add_exchange(self, from_id, to_id, exchange_type, amount):
-        from_act = self.exchanges.get(from_id, [])
-        from_act.append((to_id, exchange_type, amount))
-        self.exchanges[from_id] = from_act
+        from_act = self.exchanges.get(to_id, [])
+        from_act.append((from_id, exchange_type, amount))
+        self.exchanges[to_id] = from_act
 
     def save(self):
         self.write(self.exchanges)
