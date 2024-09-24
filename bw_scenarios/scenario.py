@@ -9,14 +9,21 @@ from .meta import scenarios
 
 class Scenario(ProcessedDataStore):
     """
-    {
-        to_act.id: [
-            (from_act.id, type, amount),
-        ]
-    }
+    Scenario Datastore containing all the exchanges modified for the scenario
 
+    ...
+
+    Attributes
+    ----------
+    exchanges: dict
+        Dictionary of exchanges modified for the scenario in the following format:
+        {
+            to_activity_id: [
+                (from_activity_id, type, amount),
+            ]
+        }
+    dp_static: bw_processing.DataPackage
     """
-
     _metadata = scenarios
 
     def __init__(self, name: str):
@@ -94,12 +101,29 @@ class Scenario(ProcessedDataStore):
             data_array=b_data,
         )
 
-    def add_exchange(self, from_id, to_id, exchange_type, amount):
+    def add_exchange(self, from_id: int, to_id: int, exchange_type: str, amount: float):
+        """
+        Adds an exchange to the scenario
+
+        Parameters
+        ----------
+        from_id: int
+            Activity id of the activity the exchange originates from
+        to_id: int
+            Activity id of the activity the exchanges flows to
+        exchange_type: str
+            Type of the exchange, e.g. "biosphere" or "technosphere"
+        amount: float
+            Amount value of the exchange
+        """
         from_act = self.exchanges.get(to_id, [])
         from_act.append((from_id, exchange_type, amount))
         self.exchanges[to_id] = from_act
 
     def save(self):
+        """
+        Save the scenario by writing all it's exchanges to disk
+        """
         self.write(self.exchanges)
 
     def process(self, **extra_metadata):
