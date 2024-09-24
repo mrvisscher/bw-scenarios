@@ -1,12 +1,14 @@
-from .scenario import Scenario
-
 import pandas as pd
 from typing import Optional, Union
 from os import PathLike
 from pathlib import Path
 
+from .scenario import Scenario
+from .strategies import separate_code_from_key
+
+
 class SDFImporter:
-    data: dict
+    data: pd.DataFrame
     strategies: list
 
     TO_FIELDS = [
@@ -17,6 +19,7 @@ class SDFImporter:
         "to categories",
         "to key",
     ]
+
     FROM_FIELDS = [
         "from activity name",
         "from reference product",
@@ -24,8 +27,8 @@ class SDFImporter:
         "from categories",
         "from database",
         "from key",
+        "flow type",
     ]
-    FROM_FIELDS.append("flow type")
 
     def __init__(self):
         pass
@@ -113,45 +116,20 @@ class SDFImporter:
                 )
             )
 
-        df = df.fillna(value="")
-
-        # Define the fields that contain the to and from information
-
-        value_fields = [
-            x for x in df.columns.tolist() if x not in expected_columns
-        ]  # value fields are all other fields
-
-        sdf_dict = {}
-
-        # Iterate over each row
-        for _, row in df.iterrows():
-
-            # store segments of rows in tuples and values in dictionaries
-            to_tuple = tuple(row[field] for field in cls.TO_FIELDS)
-            from_tuple = tuple(row[field] for field in cls.FROM_FIELDS)
-            values = {field: row[field] for field in value_fields}
-
-            # If the to_tuple is not in the dictionary, initialize it
-            if to_tuple not in sdf_dict:
-                sdf_dict[to_tuple] = {field: row[field] for field in cls.TO_FIELDS}
-                sdf_dict[to_tuple]["exchanges"] = []
-
-            # Append the from_tuple exchange and values to the to_tuple's exchanges list
-            from_dict = {field: row[field] for field in cls.FROM_FIELDS}
-            from_dict["values"] = values
-
-            sdf_dict[to_tuple]["exchanges"].append(from_dict)
+        df["from id"] = None
+        df["to id"] = None
 
         importer = cls()
-
-        importer.data = sdf_dict
+        importer.data = df
         return importer
 
     @property
-    def unlinked(self) -> list:
+    def unlinked(self) -> pd.DataFrame:
+        return self.data[self.data["from id"].isna() & self.data["to id"].isna()]
 
-
-        return []
+    @property
+    def scenario_names(self) -> list:
+        return [col for col in self.data.columns if col not in self.TO_FIELDS + self.FROM_FIELDS + ['default', 'from id', 'to id']]
 
     def apply_strategies(self):
         """Apply all data mutation strategies to scenarios"""
@@ -159,27 +137,21 @@ class SDFImporter:
 
     def apply_strategy(self, strategy):
         """Apply a data mutation strategy to scenarios"""
-        pass
+        self.data = strategy(self.data)
 
     def to_datapackage(self):
         """Process all data into a datapackage"""
         pass
 
     def write(self):
-        if self.unlinked:
+        if len(self.unlinked):
             raise Exception("Cannot write unlinked scenarios")
 
-        scenarios = {}
+        scenarios = {name: Scenario(name) for name in self.scenario_names}
 
-        for to_act in self.data.values():
-            for exc in to_act["exchanges"]:
-                for scenario, value in exc["values"].items():
+        for i, row in self.data[["from id", "to id", "flow type"] + self.scenario_names].iterrows():
+            for name, scenario in scenarios.items():
+                scenario.add_exchange(row["from id"], row["to id"], row["flow type"], row[name])
 
-                    if scenario not in scenarios:
-                        scenarios[scenario] = {}
-
-                    if not scenarios[scenario][to_act["id"]]:
-                        scenarios[scenario][to_act["id"]] = []
-
-                    scenarios[scenario][to_act["id"]].append((to_act["id"], value, to_act["flow type"]))
-
+        for scenario in scenarios.values():
+            scenario.save()
