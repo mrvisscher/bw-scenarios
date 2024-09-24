@@ -7,9 +7,22 @@ import bw2data as bd
 from bw2data.errors import UnknownObject
 
 
-def separate_code_from_key(data: pd.DataFrame) -> pd.DataFrame:
-    data["from code"] = data["from key"].apply(lambda key: eval(key)[1])
-    data["to code"] = data["to key"].apply(lambda key: eval(key)[1])
+def separate_keys(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Splits the key fields up into database and code fields. Overwrites existing values. Removes the key fields.
+    """
+
+    def parse(key):
+        try:
+            return pd.Series(eval(key))
+        except Exception as e:
+            return pd.Series((None, None, ))
+
+    data[["from database", "from code"]] = data["from key"].apply(parse)
+    data[["to database", "to code"]] = data["to key"].apply(parse)
+
+    data.drop(columns=["from key", "to key"], inplace=True)
+
     return data
 
 
