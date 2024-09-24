@@ -38,13 +38,12 @@ def link_scenario_on_keys(data: pd.DataFrame) -> pd.DataFrame:
         except UnknownObject:
             id_mapping[key] = None
 
-    for index, db, code in data[["from database", "from code"]].itertuples():
+    for index, from_db, from_code, to_db, to_code in data[["from database", "from code", "to database", "to code"]].itertuples():
         if pd.isna(data.loc[index, "from id"]):
-            data.loc[index, "from id"] = id_mapping[(db, code)]
+            data.loc[index, "from id"] = id_mapping[(from_db, from_code)]
 
-    for index, db, code in data[["to database", "to code"]].itertuples():
         if pd.isna(data.loc[index, "to id"]):
-            data.loc[index, "to id"] = id_mapping[(db, code)]
+            data.loc[index, "to id"] = id_mapping[(to_db, to_code)]
 
     return data
 
