@@ -40,7 +40,9 @@ class SDFImporter:
         """
         # check if the path is given in the correct format
         if not isinstance(path, (str, PathLike)):
-            raise f"Path must be string or PathLike, but type is {type(path)}"
+            raise TypeError(
+                f"Path must be string or PathLike, but type is {type(path)}"
+            )
 
         df_data = pd.read_excel(path)
 
@@ -70,7 +72,7 @@ class SDFImporter:
                 semicol = line.find(";")
             if comma == -1 and semicol == -1:
                 # neither a comma or semicolon were found, raise error
-                raise (
+                raise ValueError(
                     "Delimiter not given and delimiter ',' or ';' not found. "
                     "Supply delimiter or ensure delimiter is ',' or ';'."
                 )
@@ -129,7 +131,12 @@ class SDFImporter:
 
     @property
     def scenario_names(self) -> list:
-        return [col for col in self.data.columns if col not in self.TO_FIELDS + self.FROM_FIELDS + ['default', 'from id', 'to id']]
+        return [
+            col
+            for col in self.data.columns
+            if col
+            not in self.TO_FIELDS + self.FROM_FIELDS + ["default", "from id", "to id"]
+        ]
 
     def apply_strategies(self):
         """Apply all data mutation strategies to scenarios"""
@@ -150,9 +157,13 @@ class SDFImporter:
 
         scenarios = {name: Scenario(name) for name in self.scenario_names}
 
-        for i, row in self.data[["from id", "to id", "flow type"] + self.scenario_names].iterrows():
+        for i, row in self.data[
+            ["from id", "to id", "flow type"] + self.scenario_names
+        ].iterrows():
             for name, scenario in scenarios.items():
-                scenario.add_exchange(row["from id"], row["to id"], row["flow type"], row[name])
+                scenario.add_exchange(
+                    row["from id"], row["to id"], row["flow type"], row[name]
+                )
 
         for scenario in scenarios.values():
             scenario.save()
