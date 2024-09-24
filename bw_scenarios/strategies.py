@@ -2,6 +2,7 @@ from typing import Union, Iterable
 
 import pandas as pd
 
+
 def separate_code_from_key(data: pd.DataFrame) -> pd.DataFrame:
     data["from code"] = data["from key"].apply(lambda key: eval(key)[1])
     data["to code"] = data["to key"].apply(lambda key: eval(key)[1])
@@ -33,4 +34,4 @@ def link_scenario_on_fields(data: pd.DataFrame) -> pd.DataFrame:
 
 def check_exchange_number(data: pd.DataFrame, except_on_mismatch=True) -> pd.DataFrame:
     """Check whether the number of Scenario Exchanges matches the number of exchanges in the linked activity"""
-    return data
+    raise NotImplementedError("We acknowledge that this is an issue and will deal with this later")

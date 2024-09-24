@@ -133,7 +133,8 @@ class SDFImporter:
 
     def apply_strategies(self):
         """Apply all data mutation strategies to scenarios"""
-        pass
+        for strategy in self.strategies:
+            self.apply_strategy(strategy)
 
     def apply_strategy(self, strategy):
         """Apply a data mutation strategy to scenarios"""
