@@ -2,6 +2,9 @@ from typing import Union, Iterable
 
 import pandas as pd
 
+import bw2data as bd
+from bw2data.errors import UnknownObject
+
 
 def separate_code_from_key(data: pd.DataFrame) -> pd.DataFrame:
     data["from code"] = data["from key"].apply(lambda key: eval(key)[1])
@@ -24,6 +27,16 @@ def replace_field(data: pd.DataFrame, field: Union[str, Iterable[str]], replace:
 
 def link_scenario_on_keys(data: pd.DataFrame) -> pd.DataFrame:
     """Link scenario entries based on the database, code tuple"""
+    from_set = set([tuple(x) for x in data[['from database', 'from code']].values])
+    [from_set.add(tuple(x)) for x in data[['to database', 'to code']].values]
+
+    id_mapping = {}
+    for key in from_set:
+        try:
+            id_mapping[key] = bd.get_id(key)
+        except UnknownObject:
+            id_mapping[key] = None
+
     return data
 
 
