@@ -26,7 +26,7 @@ def replace_field(data: pd.DataFrame, field: Union[str, Iterable[str]], replace:
     return data.replace(to_replace=to_replace)
 
 
-def link_scenario_on_keys(data: pd.DataFrame) -> pd.DataFrame:
+def link_scenario_on_keys(data: pd.DataFrame, relink=False) -> pd.DataFrame:
     """Link scenario entries based on the database, code tuple"""
     from_set = set([tuple(x) for x in data[['from database', 'from code']].values])
     [from_set.add(tuple(x)) for x in data[['to database', 'to code']].values]
@@ -39,10 +39,10 @@ def link_scenario_on_keys(data: pd.DataFrame) -> pd.DataFrame:
             id_mapping[key] = None
 
     for index, from_db, from_code, to_db, to_code in data[["from database", "from code", "to database", "to code"]].itertuples():
-        if pd.isna(data.loc[index, "from id"]):
+        if pd.isna(data.loc[index, "from id"]) or relink:
             data.loc[index, "from id"] = id_mapping[(from_db, from_code)]
 
-        if pd.isna(data.loc[index, "to id"]):
+        if pd.isna(data.loc[index, "to id"]) or relink:
             data.loc[index, "to id"] = id_mapping[(to_db, to_code)]
 
     return data
