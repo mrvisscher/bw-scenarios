@@ -27,7 +27,7 @@ class Scenario(ProcessedDataStore):
 
     def get_arrays_for_datapackage(self, matrix_name):
         """
-        prepare the input to the datapackges (indices, data and flip_array)
+        prepare the input to the datapackges (indices, data and flip array)
 
         matrix_name: str
             name of the matrix (technosphere or biosphere)
@@ -61,7 +61,7 @@ class Scenario(ProcessedDataStore):
 
                         t_indices.append((from_act_id, to_act_id))
                         t_data.append(amount)
-            t_flip = None  # no sgn flipping needed for biosphere exchanges
+            t_flip = None  # no sign flipping needed for biosphere exchanges
 
         return (
             np.array(t_indices, dtype=bwp.INDICES_DTYPE),
