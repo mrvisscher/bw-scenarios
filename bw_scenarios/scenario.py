@@ -27,3 +27,6 @@ class Scenario(ProcessedDataStore):
     def save(self):
         self.write(self.exchanges)
 
+    def process(self, **extra_metadata):
+        return
+

@@ -4,7 +4,6 @@ from os import PathLike
 from pathlib import Path
 
 from .scenario import Scenario
-from .strategies import separate_code_from_key
 
 
 class SDFImporter:
@@ -133,8 +132,9 @@ class SDFImporter:
         return [
             col
             for col in self.data.columns
-            if col
-            not in self.TO_FIELDS + self.FROM_FIELDS + ["default", "from id", "to id"]
+            if not col.startswith("to ")
+            and not col.startswith("from ")
+            and col not in ["flow type", "default"]
         ]
 
     def apply_strategies(self):
