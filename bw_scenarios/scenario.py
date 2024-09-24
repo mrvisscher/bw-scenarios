@@ -1,6 +1,7 @@
 from bw2data.data_store import ProcessedDataStore
 from bw2calc.lca import prepare_lca_inputs
 import bw_processing as bwp
+import numpy as np
 
 from .meta import scenarios
 
@@ -38,9 +39,6 @@ class Scenario(ProcessedDataStore):
 
         if matrix_name == "technosphere":
             for to_act_id, exchanges_info in self.exchanges.items():
-                print(to_act_id)
-                print(exchanges_info)
-
                 for from_act_id, exc_type, amount in exchanges_info:
                     if (
                         exc_type == "biosphere"
@@ -65,7 +63,11 @@ class Scenario(ProcessedDataStore):
                         t_data.append(amount)
             t_flip = None  # no sgn flipping needed for biosphere exchanges
 
-        return t_indices, t_data, t_flip
+        return (
+            np.array(t_indices, dtype=bwp.INDICES_DTYPE),
+            np.array(t_data),
+            np.array(t_flip),
+        )
 
     def add_datapackage(self):
         """
