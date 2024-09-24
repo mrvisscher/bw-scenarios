@@ -156,6 +156,9 @@ class SDFImporter:
 
         scenarios = {name: Scenario(name) for name in self.scenario_names}
 
+        for scenario in scenarios.values():
+            scenario.exchanges = {}
+
         for i, row in self.data[
             ["from id", "to id", "flow type"] + self.scenario_names
         ].iterrows():
