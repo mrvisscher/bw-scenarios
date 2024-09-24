@@ -1,6 +1,7 @@
 from typing import Union, Iterable
 
 import pandas as pd
+import numpy as np
 
 import bw2data as bd
 from bw2data.errors import UnknownObject
@@ -36,6 +37,14 @@ def link_scenario_on_keys(data: pd.DataFrame) -> pd.DataFrame:
             id_mapping[key] = bd.get_id(key)
         except UnknownObject:
             id_mapping[key] = None
+
+    for index, db, code in data[["from database", "from code"]].itertuples():
+        if pd.isna(data.loc[index, "from id"]):
+            data.loc[index, "from id"] = id_mapping[(db, code)]
+
+    for index, db, code in data[["to database", "to code"]].itertuples():
+        if pd.isna(data.loc[index, "to id"]):
+            data.loc[index, "to id"] = id_mapping[(db, code)]
 
     return data
 
