@@ -90,8 +90,7 @@ class SDFImporter:
     @classmethod
     def from_dataframe(cls, df: pd.DataFrame) -> "SDFImporter":
         """
-        Parse the SDF input data from a dataframe that is read in either from a csv or excel file into a nested dictionary.
-        Stores the nested dictionary in the data attribute of the class.
+        Parse the SDF input data from a dataframe that is read in either from a csv or excel file.
         """
 
         # check if the dataframe contains the expected columns
