@@ -67,18 +67,10 @@ class Scenario(ProcessedDataStore):
 
         return t_indices, t_data, t_flip
 
-    def add_datapackage(self, fu, method):  # how to get fu and method?
+    def add_datapackage(self):
         """
-        build datapackage for the scenario
+        build biosphere and technosphere datapackages for the scenario
         """
-
-        self.fu = fu
-        self.method = method
-
-        # pre-construct the datapackages for LCA matrices
-        _, data_objs, remapping = prepare_lca_inputs(demand=self.fu, method=self.method)
-        self.data_objs = data_objs
-        self.remapping_dicts = remapping
 
         t_indices, t_data, t_flip = self.get_arrays_for_datapackage("technosphere")
         b_indices, b_data, _ = self.get_arrays_for_datapackage("biosphere")
@@ -95,8 +87,6 @@ class Scenario(ProcessedDataStore):
             indices_array=b_indices,
             data_array=b_data,
         )
-
-    # LCA(fu, data_objs=data_objs, remapping_dicts=remapping)
 
     def add_exchange(self, from_id, to_id, exchange_type, amount):
         from_act = self.exchanges.get(to_id, [])
