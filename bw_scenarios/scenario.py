@@ -1,5 +1,6 @@
 from bw2data.data_store import ProcessedDataStore
 from bw2calc.lca import prepare_lca_inputs
+from bw2data.configuration import labels
 import bw_processing as bwp
 import numpy as np
 from bw2data.errors import UnknownObject
@@ -51,14 +52,12 @@ class Scenario(ProcessedDataStore):
         if matrix_name == "technosphere":
             for to_act_id, exchanges_info in self.exchanges.items():
                 for from_act_id, exc_type, amount in exchanges_info:
-                    if (
-                        exc_type == "biosphere"
-                    ):  # skip biosphere exchanges, but keep going for technosphere and production exchanges
+                    if exc_type == "biosphere":  # skip biosphere exchanges,
                         continue
 
                     t_indices.append((from_act_id, to_act_id))
                     t_data.append(amount)
-                    if exc_type == "technosphere":
+                    if exc_type in labels.technosphere_negative_edge_types:
                         t_flip.append(True)
                     else:
                         t_flip.append(False)
@@ -67,9 +66,8 @@ class Scenario(ProcessedDataStore):
             for to_act_id, exchanges_info in self.exchanges.items():
                 for from_act_id, exc_type, amount in exchanges_info:
                     if (
-                        exc_type == "biosphere"
-                    ):  # there is only one type of biosphere exchanges
-
+                        exc_type in labels.biosphere_edge_types
+                    ):  # write only biosphere exchanges:
                         t_indices.append((from_act_id, to_act_id))
                         t_data.append(amount)
             t_flip = None  # no sign flipping needed for biosphere exchanges
