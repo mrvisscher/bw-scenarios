@@ -31,12 +31,17 @@ requires-python = ">=3.9"
 dependencies = [
     # dependencies as strings with quotes, e.g. "foo"
     # You can add version requirements like "foo>2.0"
+	"pandas",
+	"numpy",
+	"bw2data",
+	"bw2cal",
+	"bw_processing",
 ]
 
 [project.urls]
-source = "https://github.com/marc-vdm/bw-scenarios"
-homepage = "https://github.com/marc-vdm/bw-scenarios"
-tracker = "https://github.com/marc-vdm/bw-scenarios/issues"
+source = "https://github.com/mrvisscher/bw-scenarios"
+homepage = "https://github.com/mrvisscher/bw-scenarios"
+tracker = "https://github.com/mrvisscher/bw-scenarios/issues"
 
 [project.optional-dependencies]
 # Getting recursive dependencies to work is a pain, this
