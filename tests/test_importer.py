@@ -9,7 +9,7 @@ from bw_scenarios.importer import SDFImporter
 
 def test_from_dataframe_wrong_cols(bogus_df):
     """
-    Verify that the SDFIMporter raises ValueError when supplied a bogus df.
+    Verify that the SDFImporter raises ValueError when supplied a bogus df.
 
     Parameters
     ----------
