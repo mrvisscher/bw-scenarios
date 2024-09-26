@@ -33,9 +33,9 @@ dependencies = [
     # You can add version requirements like "foo>2.0"
 	"pandas",
 	"numpy",
-	"bw2data",
-	"bw2cal",
-	"bw_processing",
+	"bw2data>=4.0.dev54",
+	"bw2calc>=2.0.dev22",
+	"bw_processing>=1.0",
 ]
 
 [project.urls]
