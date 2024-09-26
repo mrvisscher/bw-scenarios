@@ -110,7 +110,7 @@ class SDFImporter:
         ]
 
         if not all([col in df.columns for col in expected_columns]):
-            print(
+            raise ValueError(
                 "Warning: the dataframe does not contain the expected columns: {}".format(
                     expected_columns
                 )
