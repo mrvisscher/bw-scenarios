@@ -30,12 +30,14 @@ class Scenario(ProcessedDataStore):
     def __init__(self, name: str):
         super().__init__(name)
 
-        self.dp_static = bwp.create_datapackage()  # tdb if static is correct
+        self.dp_static = bwp.create_datapackage()
 
         try:
             self.exchanges = self.load()
         except UnknownObject:
             self.exchanges = {}
+
+        self.add_datapackage()
 
     def get_arrays_for_datapackage(self, matrix_name):
         """
