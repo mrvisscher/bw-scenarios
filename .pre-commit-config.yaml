@@ -2,7 +2,7 @@ exclude: '^docs/conf.py'
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.5.0
+  rev: v4.6.0
   hooks:
   - id: trailing-whitespace
   - id: check-added-large-files
@@ -41,7 +41,7 @@ repos:
     args: [--settings-path=pyproject.toml]
 
 - repo: https://github.com/psf/black
-  rev: 24.1.1
+  rev: 24.8.0
   hooks:
   - id: black
     args: [--config=pyproject.toml]
@@ -54,7 +54,7 @@ repos:
 #     additional_dependencies: [black]
 
 - repo: https://github.com/PyCQA/flake8
-  rev: 7.0.0
+  rev: 7.1.1
   hooks:
   - id: flake8
     additional_dependencies: [Flake8-pyproject]
