@@ -1,7 +1,13 @@
-import pandas as pd
-from typing import Optional, Union
+"""
+bw_scenarios module to parse the SDF.
+
+"""
+
 from os import PathLike
 from pathlib import Path
+from typing import Optional, Union
+
+import pandas as pd
 
 from .scenario import Scenario
 
@@ -89,7 +95,8 @@ class SDFImporter:
     @classmethod
     def from_dataframe(cls, df: pd.DataFrame) -> "SDFImporter":
         """
-        Parse the SDF input data from a dataframe that is read in either from a csv or excel file.
+        Parse the SDF input data from a dataframe that is read in either from a csv or
+        excel file.
         """
 
         # check if the dataframe contains the expected columns
@@ -111,9 +118,8 @@ class SDFImporter:
 
         if not all([col in df.columns for col in expected_columns]):
             raise ValueError(
-                "Warning: the dataframe does not contain the expected columns: {}".format(
-                    expected_columns
-                )
+                "Warning: the dataframe does not contain "
+                "the expected columns: {}".format(expected_columns)
             )
 
         df["from id"] = None
